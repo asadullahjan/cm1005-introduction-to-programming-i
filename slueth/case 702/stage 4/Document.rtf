@@ -1,0 +1,404 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 /*\par
+\par
+Officer: 6012708\par
+CaseNum: 702-3-61033440-6012708\par
+\par
+Case 702 - The case of Vanishing Vannevar\par
+Stage 4 - High speed chase\par
+\par
+\ldblquote All units: Vannevar is on the run. They are driving a blue car with a numberPlate of USSK8Q.  Pursue at speed.\par
+I repeat pursue at speed.\rdblquote  Okay Vannevar\rquote s game is nearly up. Go get him kid.\par
+Complete the helper functions below to locate, chase and arrest Vannevar.\par
+\par
+There are many possible ways of completing this task,\par
+but you should ONLY use the following commands and techniques:\par
+\par
+\tab - Incrementing and assiging variables\par
+\tab - Maths function such as random, min, abs, and constrain\par
+\tab - Conditional statements\par
+\tab - Traversing arrays with for loops\par
+\tab - calling functions and returning values\par
+\par
+HINT: make sure you take a look at the initialisation of detectiveVehicleObject and the cars in\par
+vehiclesData to understand their properties.\par
+\par
+*/\par
+\par
+///////////////////////// HELPER FUNCTIONS /////////////////////\par
+\par
+function Move_Vehicle()\par
+\{\par
+\tab detectiveVehicleObject.distanceAmount += detectiveVehicleObject.speedVal;\par
+\tab detectiveVehicleObject.engineShudderVal += random( -0.03, 0.03);\par
+\tab detectiveVehicleObject.engineShudderVal = constrain(detectiveVehicleObject.engineShudderVal, 0.07, 1.09);\par
+\tab Turn_Engine(detectiveVehicleObject);\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - increment detectiveVehicleObject's distanceAmount property by its speedVal property \par
+\tab  - add a random amount between -0.03 and 0.03 to detectiveVehicleObject's engineShudderVal property\par
+\tab  - use the constrain function to constrain detectiveVehicleObject's engineShudderVal property to values between 0.07 and 1.09\par
+\tab  - call the Turn_Engine function passing detectiveVehicleObject as an argument\par
+\tab */\par
+\}\par
+\par
+\par
+function Change_Lanes(targetVehicle)\par
+\{\par
+\tab if(targetVehicle.x == lanePositionA)\par
+\tab\{\par
+\tab\tab targetVehicle.x = lanePositionB;\par
+\tab\}\par
+\tab else\par
+\tab\{\par
+\tab\tab targetVehicle.x = lanePositionA;\par
+\tab\}\par
+\tab return targetVehicle;\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - move targetVehicle from one lane to the other.\par
+\tab  - do the move in a single step without any extra animation.\par
+\tab  - use lanePositionA and lanePositionB to effect the change.\par
+\tab  - finally you should return targetVehicle at the end of the function.\par
+\tab  hint: You will need to modify the x property of targetVehicle.\par
+\tab */\par
+\}\par
+\par
+\par
+function Car_IsInfront( target_carA, target_carB )\par
+\{\par
+\tab if( target_carA.x == target_carB.x\par
+\tab\tab && (target_carB.distanceAmount-target_carA.distanceAmount)<200\par
+\tab\tab && target_carA.distanceAmount < target_carB.distanceAmount )\par
+\tab\{\par
+\tab\tab console.log(target_carB);\par
+\tab\tab return true;\par
+\par
+\tab\}else\par
+\tab\{\par
+\tab\tab return false;\par
+\tab\}\tab\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - determine if target_carA is in the same lane and less than 200px behind target_carB.\par
+\tab  - do this by comparing the two cars' distanceAmount properties\par
+\tab  - if these requirements are met then return true. Otherwise return false.\par
+\tab */\par
+\}\par
+\par
+\par
+function Check_IsAtSide()\par
+\{\par
+\tab for(var i = 0 ; i < vehiclesData.length; i++)\par
+\tab\{\par
+\tab\tab if( abs(vehiclesData[i].distanceAmount - detectiveVehicleObject.distanceAmount) < 25 && vehiclesData[i].x != detectiveVehicleObject.x )\par
+\tab\tab\{\par
+\tab\tab\tab return vehiclesData[i];\par
+\tab\tab\}\par
+\tab\}\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - traverse vehiclesData and determine if any of the cars are parallel with detectiveVehicleObject.\par
+\tab  - if a car is found to be parallel to detectiveVehicleObject then return that car object.\par
+\tab  - cars are considered parallel if the absolute difference between their distanceAmount properties is less than 25 px and they have non-matching x properties\tab */\par
+\}\par
+\par
+\par
+function Detect_Suspect()\par
+\{\par
+\tab if(Check_IsAtSide())\par
+\tab\{\par
+\tab\tab if(Check_IsAtSide().numberPlate == "USSK8Q")\par
+\tab\tab\{\par
+\tab\tab\tab suspect = Check_IsAtSide();\par
+\tab\tab\}\par
+\tab\}\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - Check cars passing parallel to detectiveVehicleObject to see if they match the numberPlate property in the suspect description.\par
+\tab  - it does this by calling Check_IsAtSide.\par
+\tab  - if a positive result is returned then the numberPlate property of the found car is then checked against the suspect description.\par
+\tab  - if a match is found then the car in question is assigned to the global variable suspect.\par
+\tab */\par
+\}\par
+\par
+\par
+function Tail_Suspect()\par
+\{\par
+\tab detectiveVehicleObject.speedVal *= 1.001;\par
+\tab detectiveVehicleObject.speedVal = min(6,detectiveVehicleObject.speedVal);\par
+\tab for(var i = 0 ; i<vehiclesData.length; i++)\par
+\tab\{\par
+\tab\tab if(Car_IsInfront(detectiveVehicleObject,vehiclesData[i]))\par
+\tab\tab\{\par
+\tab\tab\tab if(vehiclesData[i].numberPlate == "USSK8Q")\par
+\tab\tab\tab\{\par
+\tab\tab\tab\tab Book_Suspect(vehiclesData[i]);\par
+\tab\tab\tab\}else\{\par
+\tab\tab\tab\tab Change_Lanes(vehiclesData[i]);\par
+\tab\tab\tab\}\par
+\tab\tab\}\par
+\tab\}\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - scale the speedVal property of detectiveVehicleObject by a factor of 1.001.\par
+\tab  - use the min function to make sure that detectiveVehicleObject's speedVal property does not exceed 6.\par
+\tab  - it should traverse vehiclesData calling Car_IsInfront for each car to detect any cars in front of detectiveVehicleObject.\par
+\tab  - if a positive result is returned it should check to see if the numberPlate property of that car matches that of suspect.\par
+\tab  - for a match, Book_Suspect should be called, otherwise call Change_Lanes.\par
+\tab */\par
+\}\par
+\par
+\par
+function Book_Suspect(target_car)\par
+\{\par
+\tab target_car.isDetained = true;\par
+\tab detectiveVehicleObject.arrestingSuspect = true;\par
+\tab target_car.speedVal = 0;\par
+\tab detectiveVehicleObject.speedVal = 0;\par
+\tab /*\par
+\tab This function should do the following: \par
+\tab  - set the isDetained property of target_car to true.\par
+\tab  - set the arrestingSuspect property of detectiveVehicleObject to true.\par
+\tab  - set the speedVal properties of both vehicles to zero.\par
+\tab */\par
+\}\par
+\par
+\par
+//////////////DO NOT CHANGE CODE BELOW THIS LINE//////////////////\par
+\par
+var detectiveVehicleObject;\par
+\par
+var roadWidth;\par
+var roadLeftEdge;\par
+var lanePositionA;\par
+var lanePositionB;\par
+var carImages = \{\};\par
+var suspect;\par
+\par
+var vehiclesData = [\par
+\{ x: 300, y: 0, distanceAmount: -200, vehicleVariety: 'greenCar', numberPlate: 'RZRP17', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 200, vehicleVariety: 'redCar', numberPlate: '260LDD', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 600, vehicleVariety: 'blueCar', numberPlate: '42ME7Q', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 1000, vehicleVariety: 'whiteCar', numberPlate: '1PELW9', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 1400, vehicleVariety: 'whiteCar', numberPlate: '6PANS7', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 1800, vehicleVariety: 'blueCar', numberPlate: 'USSK8Q', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 2200, vehicleVariety: 'redCar', numberPlate: '1LI976', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 2600, vehicleVariety: 'whiteCar', numberPlate: 'X6US48', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 3000, vehicleVariety: 'redCar', numberPlate: 'A2TCMN', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 3400, vehicleVariety: 'blueCar', numberPlate: '6C4J2W', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 3800, vehicleVariety: 'greenCar', numberPlate: 'ZCT51Y', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 4200, vehicleVariety: 'redCar', numberPlate: 'YH68RE', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 4600, vehicleVariety: 'redCar', numberPlate: 'OJRVLV', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 5000, vehicleVariety: 'whiteCar', numberPlate: 'O6JHAE', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 5400, vehicleVariety: 'redCar', numberPlate: 'A04BOO', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 5800, vehicleVariety: 'blueCar', numberPlate: '4DT51L', speedVal: 2, exhaust: [  ]\} , \{ x: 300, y: 0, distanceAmount: 6200, vehicleVariety: 'redCar', numberPlate: 'O8SWLB', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 6600, vehicleVariety: 'blueCar', numberPlate: 'UFJMGR', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 7000, vehicleVariety: 'redCar', numberPlate: 'U582ZK', speedVal: 2, exhaust: [  ]\} , \{ x: 500, y: 0, distanceAmount: 7400, vehicleVariety: 'redCar', numberPlate: 'GDFURU', speedVal: 2, exhaust: [  ]\} \par
+];\par
+\par
+\par
+\par
+function preload()\par
+\{\par
+\par
+\tab var carTypes = [\par
+\tab\tab "detective",\par
+\tab\tab "redCar",\par
+\tab\tab "greenCar",\par
+\tab\tab "blueCar",\par
+\tab\tab "whiteCar",\par
+\tab ];\par
+\par
+\tab for(var i = 0; i < carTypes.length; i++)\par
+\tab\{\par
+\tab\tab carImages[carTypes[i]] = loadImage("cars/" + carTypes[i] + ".png");\par
+\tab\}\par
+\}\par
+\par
+function setup()\par
+\{\par
+\tab createCanvas(800,800);\par
+\tab textSize(30);\par
+\tab textAlign(CENTER);\par
+\par
+\tab roadWidth = 400;\par
+\tab roadLeftEdge = 200;\par
+\tab lanePositionA = 300;\par
+\tab lanePositionB = 500;\par
+\par
+\tab detectiveVehicleObject = \par
+\tab\{\par
+\tab\tab x: roadLeftEdge + roadWidth/4,\par
+\tab\tab y: 550,\par
+\tab\tab distanceAmount: 0,\par
+\tab\tab speedVal: 3,\par
+\tab\tab engineShudderVal: 0,\par
+\tab\tab vehicleVariety: 'detective',\par
+\tab\tab numberPlate: '5L3UTH',\par
+\tab\tab arrestingSuspect: false,\par
+\tab\tab tailingSuspect: false,\par
+\tab\tab exhaust: []\par
+\tab\}\par
+\par
+\par
+\}\par
+\par
+\par
+\par
+function draw()\par
+\{\par
+\tab background(0);\par
+\par
+\tab drawRoad();\par
+\tab drawCars();\par
+\par
+\tab if(suspect)\par
+\tab\{\par
+\tab\tab if(suspect.isDetained)\par
+\tab\tab\{\par
+\tab\tab\tab fill(255);\par
+\par
+\tab\tab\tab text("suspect isDetained!", width/2, height/2);\par
+\tab\tab\}\par
+\par
+\tab\}\par
+\par
+\par
+\tab ////////////////////// HANDLE DETECTIVE /////////////////////////\par
+\par
+\tab if(!detectiveVehicleObject.tailingSuspect&& !detectiveVehicleObject.arrestingSuspect)\par
+\tab\{\par
+\tab\tab Move_Vehicle();\par
+\tab\tab for(var i = 0; i < vehiclesData.length; i++)\par
+\tab\tab\{\par
+var b2b = Car_IsInfront(detectiveVehicleObject, vehiclesData[i]);\par
+\tab\tab\tab if(b2b)Change_Lanes(detectiveVehicleObject);\par
+\tab\tab\}\par
+\tab\tab Detect_Suspect();\par
+\tab\tab if(suspect)detectiveVehicleObject.tailingSuspect = true;\par
+\tab\}\par
+\tab else if(!detectiveVehicleObject.arrestingSuspect)\par
+\tab\{\par
+\tab\tab Tail_Suspect();\par
+\tab\tab Move_Vehicle();\par
+\tab\}\par
+\par
+\par
+\tab ////////////////////// HANDLE ASSAILANT /////////////////////////\par
+\par
+\tab if(suspect)\par
+\tab\{\par
+\tab\tab if(!suspect.isDetained)\par
+\tab\tab\{\par
+\tab\tab\tab suspect.speedVal = 5;\par
+\tab\tab\tab for(var i = 0; i < vehiclesData.length; i++)\par
+\tab\tab\tab\{\par
+\tab\tab\tab\tab var b2b = Car_IsInfront(suspect, vehiclesData[i]);\par
+\tab\tab\tab\tab if(b2b)\par
+\tab\tab\tab\tab\{\par
+\tab\tab\tab\tab\tab if(b2b.numberPlate != suspect.numberPlate)\par
+\tab\tab\tab\tab\tab\{\par
+\tab\tab\tab\tab\tab\tab Change_Lanes(suspect);\par
+\tab\tab\tab\tab\tab\}\par
+\tab\tab\tab\tab\}\par
+\tab\tab\tab\}\par
+\tab\tab\}\par
+\tab\}\par
+\par
+\par
+\tab //////////////////////HANDLE THE OTHER CARS//////////////////////\par
+\par
+\tab for(var i = 0; i < vehiclesData.length; i++)\par
+\tab\{\par
+\tab\tab vehiclesData[i].distanceAmount += vehiclesData[i].speedVal;\par
+\tab\tab vehiclesData[i].y = detectiveVehicleObject.y - vehiclesData[i].distanceAmount + detectiveVehicleObject.distanceAmount;\par
+\par
+\tab\tab if(suspect)\par
+\tab\tab\{\par
+\tab\tab\tab if(suspect.isDetained)\par
+\tab\tab\tab\{\par
+\tab\tab\tab\tab if(vehiclesData[i].x==detectiveVehicleObject.x)\par
+\tab\tab\tab\tab\{\par
+\tab\tab\tab\tab\tab if(vehiclesData[i].distanceAmount<detectiveVehicleObject.distanceAmount)\par
+\tab\tab\tab\tab\tab\{\par
+\tab\tab\tab\tab\tab\tab if(vehiclesData[i].distanceAmount-detectiveVehicleObject.distanceAmount < 200)\par
+\tab\tab\tab\tab\tab\tab\{\par
+\tab\tab\tab\tab\tab\tab\tab Change_Lanes(vehiclesData[i]);\par
+\tab\tab\tab\tab\tab\tab\}\par
+\tab\tab\tab\tab\tab\}\par
+\tab\tab\tab\tab\}\par
+\tab\tab\tab\}\par
+\tab\tab\}\par
+\par
+\tab\}\par
+\par
+\}\par
+\par
+/////////////////////////DRAWING FUNCTIONS////////////////////////\par
+\par
+function drawRoad()\par
+\{\par
+\tab stroke(100);\par
+\tab fill(50);\par
+\tab rect(roadLeftEdge,0,roadWidth,800);\par
+\tab stroke(255);\par
+\par
+\tab for(var i = -1; i < 20; i++)\par
+\tab\{\par
+\tab\tab line(\par
+\tab\tab roadLeftEdge + roadWidth/2 , i * 100 + (detectiveVehicleObject.distanceAmount%100),\par
+\tab\tab roadLeftEdge + roadWidth/2 , i * 100 + 70 + (detectiveVehicleObject.distanceAmount%100)\par
+\tab\tab );\par
+\tab\}\par
+\}\par
+\par
+function drawCars()\par
+\{\par
+\tab //draw the detective car\par
+\par
+\tab drawExhaust(detectiveVehicleObject);\par
+\tab image\par
+\tab (\par
+\tab\tab carImages["detective"],\par
+\tab\tab detectiveVehicleObject.x - carImages["detective"].width/2 + random(-detectiveVehicleObject.engineShudderVal, detectiveVehicleObject.engineShudderVal),\par
+\tab\tab detectiveVehicleObject.y + random(-detectiveVehicleObject.engineShudderVal, detectiveVehicleObject.engineShudderVal)\par
+\tab );\par
+\par
+\tab //draw all other cars\par
+\par
+\tab for(var i = 0; i < vehiclesData.length; i ++)\par
+\tab\{\par
+\tab\tab if(vehiclesData[i].y < height && vehiclesData[i].y > -height/2)\par
+\tab\tab\{\par
+\tab\tab\tab image(\par
+\tab\tab\tab carImages[vehiclesData[i].vehicleVariety],\par
+\tab\tab\tab vehiclesData[i].x - carImages[vehiclesData[i].vehicleVariety].width/2,\par
+\tab\tab\tab vehiclesData[i].y\par
+\tab\tab\tab );\par
+\tab\tab\tab Turn_Engine(vehiclesData[i]);\par
+\par
+\tab\tab\tab drawExhaust(vehiclesData[i]);\par
+\tab\tab\}\par
+\tab\}\par
+\par
+\}\par
+\par
+function Turn_Engine(car)\par
+\{\par
+\par
+\tab car.exhaust.push(\{size: 2, x: car.x, y: car.y + carImages[car.vehicleVariety].height\});\par
+\par
+\tab for(var i = car.exhaust.length -1; i >= 0 ; i--)\par
+\tab\{\par
+\par
+\tab\tab car.exhaust[i].y  += max(0.75, car.speedVal/3);\par
+\tab\tab if(car.vehicleVariety != "detective")car.exhaust[i].y += (detectiveVehicleObject.speedVal - car.speedVal);\par
+\tab\tab car.exhaust[i].x += random(-1,1);\par
+\tab\tab car.exhaust[i].size += 0.5;\par
+\par
+\tab\tab if(car.exhaust[i].y  > height || car.exhaust[i].y < 0)\par
+\tab\tab\{\par
+\tab\tab\tab car.exhaust.splice(i,1);\par
+\tab\tab\}\par
+\tab\}\par
+\}\par
+\par
+\par
+function drawExhaust(car)\par
+\{\par
+\tab\tab noStroke();\par
+\tab\tab for(var i = 0; i < car.exhaust.length; i++)\par
+\tab\tab\{\par
+\tab\tab\tab\tab var alpha = map(car.exhaust[i].size, 0, 40, 50,0);\par
+\tab\tab\tab\tab fill(125,alpha);\par
+\tab\tab\tab\tab ellipse(car.exhaust[i].x + 20, car.exhaust[i].y , car.exhaust[i].size);\par
+\par
+\tab\tab\}\par
+\}\par
+}
+ 

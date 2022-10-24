@@ -1,0 +1,15 @@
+W​rite a program that creates a 2D array for a bookcase, such that each outer array is a shelf and the inner array stores the books.  You can make this as big as you want but try to have at least four shelves with a minimum of five books on each.  
+
+W​rite a series of functions that print the following to the console. 
+
+T​he first book on each shelf. 
+
+T​he total number of books.
+
+A​ll the books.
+
+T​he books on a particular shelf specified in a parameter.
+
+Take a book name as a parameter and print the shelf location to the console.
+
+W​hen you have written your functions, call them from the setup function and then run your program.
