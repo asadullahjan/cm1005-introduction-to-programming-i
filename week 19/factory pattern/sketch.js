@@ -71,6 +71,7 @@ function createTadpole(x,y)
             this.pos = createVector(x,y);
             this.dir = createVector(random(-1,1),random(-1,1));
             this.dir.normalize();
+            console.log(this.dir);
         },
         
         draw: function()
